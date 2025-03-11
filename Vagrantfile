@@ -99,6 +99,8 @@ EOF
     echo "Setting up Redis cache for Nextcloud..."
     sudo -u www-data php /var/www/html/occ config:system:set memcache.local --value='\\OC\\Memcache\\APCu'
     sudo -u www-data php /var/www/html/occ config:system:set memcache.locking --value='\\OC\\Memcache\\Redis'
+    sudo -u www-data php /var/www/html/occ config:system:set memcache.distributed --value='\\OC\\Memcache\\Redis'
+
     sudo -u www-data php /var/www/html/occ config:system:set redis host --value='localhost'
     sudo -u www-data php /var/www/html/occ config:system:set redis port --value='6379'
 
@@ -131,6 +133,10 @@ logpath = /var/www/html/data/nextcloud.log
 maxretry = 5
 EOF
     systemctl restart fail2ban
+
+    systemctl restart redis-server apache2
+    sudo -u www-data php /var/www/html/occ maintenance:repair
+
 
     echo "Creating a swap file..."
     fallocate -l 2G /swapfile
