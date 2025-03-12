@@ -13,6 +13,7 @@ This repository provides an automated Vagrant setup for deploying a Nextcloud in
 - PHP optimizations for better performance
 - Swap file creation for improved stability
 - Systemd service for Nextcloud background jobs
+- Autoinstalling Nextcloud Apps
 
 ## Prerequisites
 Ensure that you have the following installed on your host machine:
