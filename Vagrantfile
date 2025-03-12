@@ -1,3 +1,9 @@
+require 'yaml'
+
+config_file = 'nextcloud_plugins.yml'
+nextcloud_apps = []
+nextcloud_apps = YAML.load_file(config_file)['apps'] if File.exist?(config_file)
+
 Vagrant.configure("2") do |config|
   config.vm.box = "debian/bookworm64"  
   config.vm.hostname = "nextcloud-vagrant"
@@ -104,6 +110,10 @@ EOF
     sudo -u www-data php /var/www/html/occ config:system:set redis host --value='localhost'
     sudo -u www-data php /var/www/html/occ config:system:set redis port --value='6379'
 
+
+    echo "Installing Nextcloud Apps..."
+    #{nextcloud_apps.map { |app| "sudo -u www-data php /var/www/html/occ app:install #{app}; echo 'Installing #{app}';" }.join("\n")}
+    echo "Installed Nextcloud Apps: #{nextcloud_apps.join(', ')}. Done."
 
     echo "Configuring PHP performance optimizations..."
     cat <<EOF > /etc/php/8.2/apache2/conf.d/90-nextcloud.ini
